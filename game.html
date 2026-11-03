@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bowye Mars 3000 - Livro Guia do Tripulante</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-stars">
+        <div class="star s1">✦</div>
+        <div class="star s2">✦</div>
+        <div class="star s3">✦</div>
+        <div class="star s4">✦</div>
+    </div>
+
+    <div class="menu-container selection-screen-container">
+        <a href="index.html" class="back-link">← abortar missão</a>
+
+        <header class="menu-header">
+            <span class="star-decor-left">✦</span>
+            <h1 class="title-beyond" id="book-owner">Este livro pertence a:</h1>
+            <span class="star-decor-right">✦</span>
+            <h2 class="title-time" id="player-name-display">VIAJANTE</h2>
+        </header>
+
+        <div class="setup-form">
+            <div class="form-group">
+                <label id="items-counter">Item 1 de 5 requisitados</label>
+
+                <div class="carousel-container">
+                    <button type="button" class="carousel-btn" id="btn-prev-item">◀</button>
+
+                    <div class="carousel-display" style="width: 280px;">
+                        <div class="char-image-wrapper" style="width: 120px; height: 120px;">
+                            <div class="item-visual-placeholder" id="item-icon">📦</div>
+                        </div>
+                        <div class="carousel-caption" id="item-name-display">- carregando... -</div>
+                    </div>
+
+                    <button type="button" class="carousel-btn" id="btn-next-item">▶</button>
+                </div>
+            </div>
+
+            <div class="book-page-content">
+                <div class="item-description" id="item-desc">
+                    Carregando dados da atmosfera de Marte...
+                </div>
+
+                <div class="quiz-box" id="quiz-container">
+                    <p class="quiz-question" id="quiz-question-text">Para que serve este objeto?</p>
+
+                    <div class="quiz-options">
+                        <label class="quiz-option-label">
+                            <input type="radio" name="quiz-ans" value="0" id="opt0">
+                            <span class="quiz-option-text" id="text-opt0">Opção A</span>
+                        </label>
+                        <label class="quiz-option-label">
+                            <input type="radio" name="quiz-ans" value="1" id="opt1">
+                            <span class="quiz-option-text" id="text-opt1">Opção B</span>
+                        </label>
+                        <label class="quiz-option-label">
+                            <input type="radio" name="quiz-ans" value="2" id="opt2">
+                            <span class="quiz-option-text" id="text-opt2">Opção C</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-zone" style="margin-top: 5px;">
+                <button type="button" id="btn-coletar" class="menu-link submit-btn">[ coletar objeto ]</button>
+
+                <div class="checklist-summary" id="checklist-visual">
+                    Status da Checklist: ⚪ ⚪ ⚪ ⚪ ⚪
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bancoObjetos = [
+            { id: "comida", nome: "comida de astronauta", icon: "🍕", desc: "A viagem interestelar leva cerca de 7 meses. Precisamos de comida especial desidratada para não estragar de jeito nenhum no caminho.", q: "Por que levar essa comida específica?", alt: ["Pra dar uma festa na decolagem", "Porque ela não estraga nos 7 meses de jornada espacial", "Because alien ZibZab adora roubar pizza"], correta: 1 },
+            { id: "mapa", nome: "mapa", icon: "🗺️", desc: "O solo marciano é traiçoeiro, cheio de rochas pontiagudas, crateras profundas e vales gigantescos.", q: "Qual o seu uso estratégico para sobrevivir?", alt: ["Encontrar redes de Wi-Fi públicas espalhadas", "Desviar de rochas pontiagudas e se localizar no planeta", "Localizar atalhos secretos de volta para a Terra"], correta: 1 },
+            { id: "mp3", nome: "mp3", icon: "🎧", desc: "A viagem interestelar de ida é muito longa e monótona, durando aproximadamente 7 meses inteiros dentro da nave.", q: "Para que serve o MP3 durante a missão?", alt: ["Entretenimento fundamental durante os longos meses de jornada", "Intercomunicador de rádio criptografado direto com a NASA", "Assustar monstros marcianos usando música muito alta"], correta: 0 },
+            { id: "traje", nome: "roupa(traje)", icon: "👨‍🚀", desc: "Marte é um planeta extremamente gelado (média de -60°C) e sua atmosfera não possui oxigênio respirável.", q: "O que esse traje protetor garante a você?", alt: ["Apenas ficar estiloso para fotos em gravidade zero", "Aquecimento vital contra o frio de -60°C e Oxigênio respirável", "Proteção extrema contra picadas de mosquitos espaciais"], correta: 1 },
+            { id: "ferramentas", nome: "maleta de ferramentas", icon: "🔧", desc: "Tempestades gigantes de poeira varrem o planeta vermelho e cobrem totalmente os painéis solares vitais da nave.", q: "Em qual situação você usará essa maleta?", alt: ["Desmontar partes do foguete por puro tédio", "Limpar a poeira de ferro acumulada e consertar avarias", "Construir uma casa de tijolos para morar em Marte"], correta: 1 },
+            { id: "primeiros_socorros", nome: "kit primeiro socorros", icon: "🩹", desc: "Ambientes com gravidade modificada e terrenos rochosos acidentados podem causar quedas e incidentes leves.", q: "Para que serve este kit médico?", alt: ["Tratar ferimentos imediatos e lidar com emergências médicas", "Mudar de forma estética a cor do seu capacete espacial", "Servir como moeda de troca valiosa com criaturas alienígenas"], correta: 0 },
+            { id: "radio", nome: "rádio", icon: "📻", desc: "As transmissões no vácuo sofrem atrasos gigantescos devido à imensa distância de milhões de quilômetros entre os planetas.", q: "Qual a real função do rádio transmissor?", alt: ["Sintonizar estações de rádio FM locais do Brasil", "Garantir o contato essencial com a base espacial na Terra", "Sincronizar músicas de dança com robôs exploradores"], correta: 1 },
+            { id: "experimentos", nome: "kit de experimentos", icon: "🧪", desc: "O solo de Marte é vermelho por causa do acúmulo de poeira de ferro e cientistas investigam micróbios ocultos.", q: "O que o tripulante fará ao portar este kit?", alt: ["Misturar sucos e refrescos artificiais em pó", "Coletar e analisar amostras físicas do solo marciano e bactérias", "Polir e limpar a viseira do traje espacial"], correta: 1 },
+            { id: "rover", nome: "rover", icon: "🏎️", desc: "A gravidade marciana é apenas 38% da terrestre e caminhar saltando em pedras pontiagudas rasga os trajes.", q: "Qual a vantagem de usar o veículo Rover?", alt: ["Disputar corridas de velocidade contra tempestades marcianas", "Garantir locomoção segura sobre pedras cortantes e solo áspero", "Evitar o cansaço extremo causado por andar pulando alto"], correta: 1 },
+            { id: "bolsa_aventura", nome: "bolsa de aventura", icon: "🎒", desc: "Coletar suprimentos de forma organizada é essencial para manter a estabilidade do peso durante a caminhada em solo marciano.", q: "Qual a finalidade de usar a bolsa de aventura?", alt: ["Guardar lembrancinhas compradas em Marte", "Armazenar e transportar todos os itens coletados de forma segura", "Fazer peso para não flutuar na baixa gravidade"], correta: 1 }
+        ];
+
+        let indexItemAtual = 0;
+        let itensColetados = [];
+        const totalRequisitados = 5;
+        const nomeJogador = (localStorage.getItem('nomeJogador') || 'VIAJANTE').toUpperCase();
+
+        const elPlayerName = document.getElementById('player-name-display');
+        const elItemsCounter = document.getElementById('items-counter');
+        const elItemIcon = document.getElementById('item-icon');
+        const elItemName = document.getElementById('item-name-display');
+        const elItemDesc = document.getElementById('item-desc');
+        const elQuizQuestion = document.getElementById('quiz-question-text');
+        const elChecklistVisual = document.getElementById('checklist-visual');
+        const btnPrev = document.getElementById('btn-prev-item');
+        const btnNext = document.getElementById('btn-next-item');
+        const btnColetar = document.getElementById('btn-coletar');
+
+        const itensSalvos = JSON.parse(localStorage.getItem('itensColetados') || '[]');
+        if (Array.isArray(itensSalvos)) {
+            itensColetados = itensSalvos;
+        }
+
+        function inicializarJogo() {
+            elPlayerName.textContent = nomeJogador;
+            atualizarItemNoDisplay();
+            atualizarChecklistVisual();
+        }
+
+        function atualizarItemNoDisplay() {
+            const item = bancoObjetos[indexItemAtual];
+
+            elItemIcon.textContent = item.icon;
+            elItemName.textContent = item.nome.toUpperCase();
+            elItemDesc.textContent = item.desc;
+            elQuizQuestion.textContent = item.q;
+
+            for (let i = 0; i < 3; i++) {
+                const textOpt = document.getElementById(`text-opt${i}`);
+                const radioOpt = document.getElementById(`opt${i}`);
+                if (textOpt && radioOpt) {
+                    textOpt.textContent = item.alt[i];
+                    radioOpt.checked = false;
+                }
+            }
+
+            const contador = Math.min(itensColetados.length + 1, totalRequisitados);
+            elItemsCounter.textContent = `Item ${contador} de ${totalRequisitados} requisitados`;
+
+            const itemJaColetado = itensColetados.includes(item.id);
+            btnColetar.textContent = itemJaColetado ? '[ já coletado ]' : '[ coletar objeto ]';
+            btnColetar.disabled = itemJaColetado;
+        }
+
+        function atualizarChecklistVisual() {
+            let bolinhas = '';
+            for (let i = 0; i < totalRequisitados; i++) {
+                bolinhas += i < itensColetados.length ? '🟢 ' : '⚪ ';
+            }
+            elChecklistVisual.textContent = `Status da Checklist: ${bolinhas.trim()}`;
+        }
+
+        function processarColeta() {
+            const item = bancoObjetos[indexItemAtual];
+
+            if (itensColetados.includes(item.id)) {
+                alert('Este item já foi coletado na sua mochila.');
+                return;
+            }
+
+            if (itensColetados.length >= totalRequisitados) {
+                alert('Sua mochila já está cheia com os 5 itens necessários!');
+                redirecionarFinal();
+                return;
+            }
+
+            const opcoes = document.getElementsByName('quiz-ans');
+            let selecionada = -1;
+            for (let i = 0; i < opcoes.length; i++) {
+                if (opcoes[i].checked) {
+                    selecionada = Number(opcoes[i].value);
+                    break;
+                }
+            }
+
+            if (selecionada === -1) {
+                alert('Por favor, selecione uma resposta no manual para provar que conhece o uso do item!');
+                return;
+            }
+
+            if (selecionada === item.correta) {
+                itensColetados.push(item.id);
+                localStorage.setItem('itensColetados', JSON.stringify(itensColetados));
+                atualizarChecklistVisual();
+                atualizarItemNoDisplay();
+                alert(`Excelente, Tripulante! O item "${item.nome}" foi analisado e guardado na nave.`);
+
+                if (itensColetados.length >= totalRequisitados) {
+                    alert('Missão cumprida! Todos os 5 itens vitais foram coletados com sucesso.');
+                    redirecionarFinal();
+                }
+            } else {
+                alert('Resposta incorreta! Revise as instruções do manual sobre Marte e tente novamente.');
+            }
+        }
+
+        function redirecionarFinal() {
+            localStorage.setItem('itensColetados', JSON.stringify(itensColetados));
+            window.location.href = 'win.html';
+        }
+
+        btnPrev.addEventListener('click', () => {
+            indexItemAtual -= 1;
+            if (indexItemAtual < 0) {
+                indexItemAtual = bancoObjetos.length - 1;
+            }
+            atualizarItemNoDisplay();
+        });
+
+        btnNext.addEventListener('click', () => {
+            indexItemAtual += 1;
+            if (indexItemAtual >= bancoObjetos.length) {
+                indexItemAtual = 0;
+            }
+            atualizarItemNoDisplay();
+        });
+
+        btnColetar.addEventListener('click', processarColeta);
+        window.addEventListener('DOMContentLoaded', inicializarJogo);
+    </script>
+</body>
+</html>

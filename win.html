@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bowye Mars 3000 - Missão Concluída</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-stars">
+        <div class="star s1">✦</div>
+        <div class="star s2">✦</div>
+        <div class="star s3">✦</div>
+        <div class="star s4">✦</div>
+    </div>
+
+    <div class="menu-container win-container">
+        <div class="win-panel">
+            <div class="win-badge">missão concluída</div>
+            <h1 class="title-time">MARS</h1>
+            <p class="win-tag">tripulante</p>
+            <h2 class="win-name" id="nome-vencedor">VIAJANTE</h2>
+            <p class="win-summary">Você coletou <span id="contagem-itens">0</span> de 5 itens vitais.</p>
+
+            <ul class="win-items" id="lista-itens"></ul>
+
+            <div class="win-actions">
+                <a href="index.html" class="menu-link">- voltar ao menu -</a>
+                <a href="game.html" class="menu-link">- recomeçar -</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const itensDisponiveis = [
+            { id: 'comida', nome: 'comida de astronauta' },
+            { id: 'mapa', nome: 'mapa' },
+            { id: 'mp3', nome: 'mp3' },
+            { id: 'traje', nome: 'roupa(traje)' },
+            { id: 'ferramentas', nome: 'maleta de ferramentas' }
+        ];
+
+        const nomeJogador = (localStorage.getItem('nomeJogador') || 'VIAJANTE').toUpperCase();
+        const itensColetados = JSON.parse(localStorage.getItem('itensColetados') || '[]');
+        const nomeVencedor = document.getElementById('nome-vencedor');
+        const contagemItens = document.getElementById('contagem-itens');
+        const listaItens = document.getElementById('lista-itens');
+
+        nomeVencedor.textContent = nomeJogador;
+
+        const itensParciais = itensDisponiveis.filter((item) => itensColetados.includes(item.id));
+        contagemItens.textContent = String(itensParciais.length);
+
+        if (itensParciais.length === 0) {
+            const item = document.createElement('li');
+            item.textContent = 'Nenhum item coletado ainda.';
+            listaItens.appendChild(item);
+        } else {
+            itensParciais.forEach((item) => {
+                const li = document.createElement('li');
+                li.textContent = item.nome;
+                listaItens.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>

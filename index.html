@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bowye Mars 3000 - Menu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-stars">
+        <div class="star s1">✦</div>
+        <div class="star s2">✦</div>
+        <div class="star s3">✦</div>
+        <div class="star s4">✦</div>
+    </div>
+
+    <div class="menu-container">
+        <div class="menu-left">
+            <header class="menu-header">
+                <span class="star-decor-left">✦</span>
+                <h1 class="title-beyond">Bowye</h1>
+                <span class="star-decor-right">✦</span>
+                <h2 class="title-time">MARS</h2>
+            </header>
+
+            <form id="player-form" class="player-form">
+                <label for="nomeJogador">nome do tripulante</label>
+                <input id="nomeJogador" name="nomeJogador" type="text" maxlength="18" placeholder="VIAJANTE" autocomplete="off">
+                <button type="submit" class="menu-link play-button">- iniciar missão -</button>
+            </form>
+        </div>
+
+        <div class="menu-right">
+            <div class="hourglass">
+                <div class="hourglass-top"></div>
+                <div class="hourglass-bottom"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('player-form');
+        const input = document.getElementById('nomeJogador');
+        const nomeSalvo = localStorage.getItem('nomeJogador');
+
+        if (nomeSalvo) {
+            input.value = nomeSalvo;
+        }
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const nome = input.value.trim() || 'VIAJANTE';
+            localStorage.setItem('nomeJogador', nome);
+            localStorage.removeItem('itensColetados');
+            window.location.href = 'game.html';
+        });
+    </script>
+</body>
+</html>
